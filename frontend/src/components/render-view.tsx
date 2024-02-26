@@ -5,8 +5,8 @@ import {
   RecursivePartial,
   RenderState,
   getDeviceProfile,
+  View,
 } from "@novorender/api";
-import { View } from "@novorender/api";
 import { loadPublicScene } from "@/lib/scene-loader";
 
 export interface RenderViewProps {
