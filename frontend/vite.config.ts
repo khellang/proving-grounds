@@ -21,7 +21,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: "node_modules/@novorender/api/public/**/*",
+          src: "./node_modules/@novorender/api/public/**/*",
           dest: "./novorender/api",
         },
       ],
