@@ -8,6 +8,9 @@ dependencies:
   '@novorender/api':
     specifier: ^0.1.15
     version: 0.1.15(gl-matrix@3.4.3)(tslib@2.6.2)(typescript@5.3.3)
+  '@novorender/data-js-api':
+    specifier: ^0.2.26
+    version: 0.2.26
   '@radix-ui/react-menubar':
     specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.2.19)(@types/react@18.2.60)(react-dom@18.2.0)(react@18.2.0)
@@ -661,6 +664,22 @@ packages:
       tslib: 2.6.2
       typescript: 5.3.3
     dev: false
+
+  /@novorender/data-js-api@0.2.26:
+    resolution: {integrity: sha512-WM4jQUuak45pTQo+vaqwwCRmvP/cSskL62KJnQJxvwwXzhYnqtAL0CrsEXBVMQLfV3GlOVEScucoFqszSw9K/Q==}
+    dependencies:
+      gl-matrix: 3.4.3
+    optionalDependencies:
+      '@novorender/webgl-api': 0.3.130
+    dev: false
+
+  /@novorender/webgl-api@0.3.130:
+    resolution: {integrity: sha512-g/JQndUmIqAsh193qrr1XTqXu/fjMHvPnWBER9YfFdkf8jXD3C+dO79ls9RhdokGhGhqvszhbmCVmC1ImXNHmw==}
+    requiresBuild: true
+    optionalDependencies:
+      gl-matrix: 3.4.3
+    dev: false
+    optional: true
 
   /@pkgjs/parseargs@0.11.0:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
