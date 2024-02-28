@@ -19,36 +19,34 @@ export default function RenderView(props: RenderViewProps) {
   const { sceneId } = props;
 
   useEffect(() => {
-    async function downloadImports() {
+    const controller = new AbortController();
+
+    (async () => {
       if (!canvas.current) {
         return;
       }
 
-      const sceneData = await dataApi.loadScene(sceneId);
+      const sceneData = (await dataApi.loadScene(sceneId)) as SceneData;
 
       const baseUrl = new URL("/novorender/api/", window.location.origin);
       const imports = await View.downloadImports({ baseUrl });
 
       const view = new View(canvas.current, deviceProfile, imports);
 
-      // Destructure relevant properties into variables
-      const { url: _url } = sceneData as SceneData;
-      const url = new URL(_url);
+      const url = new URL(sceneData.url);
       const parentSceneId = url.pathname.replaceAll("/", "");
       url.pathname = "";
-      // load the scene using URL gotten from `sceneData`
+
       const config = await view.loadScene(url, parentSceneId, "index.json");
 
       const { center, radius } = config.boundingSphere;
       view.activeController.autoFit(center, radius);
 
-      await view.run();
+      await view.run(controller.signal);
+    })();
 
-      return view.dispose;
-    }
-
-    downloadImports();
-  }, [deviceProfile]);
+    return () => controller.abort();
+  }, [deviceProfile, sceneId]);
 
   return <canvas ref={canvas} className="h-full w-full min-h-screen"></canvas>;
 }
