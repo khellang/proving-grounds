@@ -1,3 +1,4 @@
+import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { viteStaticCopy } from "vite-plugin-static-copy";
@@ -10,13 +11,18 @@ export default defineConfig({
       "Cross-Origin-Embedder-Policy": "require-corp",
     },
   },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
   plugins: [
     react(),
     viteStaticCopy({
       targets: [
         {
-          src: "./node_modules/@novorender/api/public",
-          dest: "./public/novorender/api",
+          src: "node_modules/@novorender/api/public",
+          dest: "public/novorender/api",
         },
       ],
     }),
