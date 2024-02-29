@@ -1,6 +1,12 @@
 import { toast } from "sonner";
 import { useLongPress } from "@uidotdev/usehooks";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface PositionButtonProps {
   index: number;
@@ -22,8 +28,19 @@ export default function PositionButton(props: PositionButtonProps) {
   };
 
   return (
-    <Button variant="outline" {...attrs} onClick={clickHandler}>
-      {`Position ${index + 1}`}
-    </Button>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="outline" {...attrs} onClick={clickHandler}>
+            {`Position ${index + 1}`}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>
+            Hold <kbd>Shift</kbd> when clicking to store position.
+          </p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
