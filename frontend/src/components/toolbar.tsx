@@ -14,8 +14,8 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { type SceneData } from "@novorender/data-js-api";
 
 export interface ToolbarProps extends React.HTMLAttributes<"div"> {
-  sceneData: SceneData;
-  view: View;
+  sceneData?: SceneData;
+  view?: View;
 }
 
 interface CameraState {
@@ -34,6 +34,9 @@ export default function Toolbar(props: ToolbarProps) {
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   const storePosition = (index: number) => {
+    if (!view) {
+      return;
+    }
     const { position, rotation } = view.renderState.camera;
     setCameraPositions({
       ...cameraPositions,
@@ -46,6 +49,9 @@ export default function Toolbar(props: ToolbarProps) {
   };
 
   const loadPosition = (index: number) => {
+    if (!view) {
+      return;
+    }
     const camera = cameraPositions[index];
     if (camera) {
       console.log(view, view.activeController, camera);
@@ -64,6 +70,10 @@ export default function Toolbar(props: ToolbarProps) {
     const controller = new AbortController();
 
     async function search() {
+      if (!view || !sceneData) {
+        return;
+      }
+
       const { db } = sceneData;
       if (db) {
         const result: number[] = [];
@@ -91,10 +101,7 @@ export default function Toolbar(props: ToolbarProps) {
 
     search();
 
-    return () => {
-      console.log("abort search");
-      controller.abort();
-    };
+    return () => controller.abort();
   }, [debouncedSearchTerm, sceneData, view]);
 
   return (

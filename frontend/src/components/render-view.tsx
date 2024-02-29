@@ -62,13 +62,11 @@ export default function RenderView(props: RenderViewProps) {
 
   return (
     <div className="relative">
-      {view && (
-        <Toolbar
-          view={view}
-          sceneData={sceneData}
-          className="absolute top-0 left-0 p-4 right-0"
-        />
-      )}
+      <Toolbar
+        view={view}
+        sceneData={sceneData}
+        className="absolute top-0 left-0 p-4 right-0"
+      />
       <canvas ref={canvas} className="h-full w-full min-h-screen"></canvas>
     </div>
   );
