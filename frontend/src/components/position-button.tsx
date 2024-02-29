@@ -1,4 +1,3 @@
-import { toast } from "sonner";
 import { useLongPress } from "@uidotdev/usehooks";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,21 +8,23 @@ import {
 } from "@/components/ui/tooltip";
 
 export interface PositionButtonProps {
+  onStorePosition: (index: number) => void;
+  onLoadPosition: (index: number) => void;
   index: number;
 }
 
 export default function PositionButton(props: PositionButtonProps) {
-  const { index } = props;
+  const { index, onLoadPosition, onStorePosition } = props;
 
   const attrs = useLongPress(() => {
-    toast.success(`Stored position ${index + 1}`);
+    onStorePosition(index);
   });
 
   const clickHandler = (e: React.MouseEvent<HTMLElement>) => {
     if (e.shiftKey) {
-      toast.success(`Stored position ${index + 1}`);
+      onStorePosition(index);
     } else {
-      toast.success(`Loaded position ${index + 1}`);
+      onLoadPosition(index);
     }
   };
 

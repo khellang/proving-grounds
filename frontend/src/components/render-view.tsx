@@ -16,6 +16,8 @@ export interface RenderViewProps {
 
 export default function RenderView(props: RenderViewProps) {
   const canvas = useRef<HTMLCanvasElement>(null);
+
+  const [sceneData, setSceneData] = useState<SceneData>();
   const [view, setView] = useState<View>();
 
   const { sceneId } = props;
@@ -23,17 +25,21 @@ export default function RenderView(props: RenderViewProps) {
   useEffect(() => {
     const controller = new AbortController();
 
-    (async () => {
+    async function loadScene() {
       if (!canvas.current) {
         return;
       }
 
-      const sceneData = (await dataApi.loadScene(sceneId)) as SceneData;
+      console.log("loadScene");
 
       const baseUrl = new URL("/novorender/api/", window.location.origin);
       const imports = await View.downloadImports({ baseUrl });
 
       const newView = new View(canvas.current, deviceProfile, imports);
+
+      const sceneData = (await dataApi.loadScene(sceneId)) as SceneData;
+
+      setSceneData(sceneData);
 
       const url = new URL(sceneData.url);
       const parentSceneId = url.pathname.replaceAll("/", "");
@@ -47,7 +53,9 @@ export default function RenderView(props: RenderViewProps) {
       setView(newView);
 
       await newView.run(controller.signal);
-    })();
+    }
+
+    loadScene();
 
     return () => controller.abort();
   }, [sceneId]);
@@ -55,7 +63,11 @@ export default function RenderView(props: RenderViewProps) {
   return (
     <div className="relative">
       {view && (
-        <Toolbar view={view} className="absolute top-0 left-0 p-4 right-0" />
+        <Toolbar
+          view={view}
+          sceneData={sceneData}
+          className="absolute top-0 left-0 p-4 right-0"
+        />
       )}
       <canvas ref={canvas} className="h-full w-full min-h-screen"></canvas>
     </div>
