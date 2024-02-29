@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { View, getDeviceProfile } from "@novorender/api";
 import { createAPI, type SceneData } from "@novorender/data-js-api";
 import Toolbar from "@/components/toolbar";
+import { useTheme } from "./theme-provider";
 
 const dataApi = createAPI({
   serviceUrl: "https://data.novorender.com/api",
@@ -20,6 +21,8 @@ export default function RenderView(props: RenderViewProps) {
   const [sceneData, setSceneData] = useState<SceneData>();
   const [view, setView] = useState<View>();
 
+  const { theme } = useTheme();
+
   const { sceneId } = props;
 
   useEffect(() => {
@@ -29,8 +32,6 @@ export default function RenderView(props: RenderViewProps) {
       if (!canvas.current) {
         return;
       }
-
-      console.log("loadScene");
 
       const baseUrl = new URL("/novorender/api/", window.location.origin);
       const imports = await View.downloadImports({ baseUrl });
@@ -47,6 +48,13 @@ export default function RenderView(props: RenderViewProps) {
 
       const config = await newView.loadScene(url, parentSceneId, "index.json");
 
+      newView.modifyRenderState({
+        background: {
+          color:
+            theme === "dark" ? [2 / 255.0, 8 / 255.0, 24 / 255.0] : [1, 1, 1],
+        },
+      });
+
       const { center, radius } = config.boundingSphere;
       newView.activeController.autoFit(center, radius);
 
@@ -58,7 +66,7 @@ export default function RenderView(props: RenderViewProps) {
     loadScene();
 
     return () => controller.abort();
-  }, [sceneId]);
+  }, [sceneId, theme]);
 
   return (
     <div className="relative">

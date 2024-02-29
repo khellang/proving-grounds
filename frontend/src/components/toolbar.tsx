@@ -54,7 +54,6 @@ export default function Toolbar(props: ToolbarProps) {
     }
     const camera = cameraPositions[index];
     if (camera) {
-      console.log(view, view.activeController, camera);
       view.activeController.moveTo(camera.position, 1000, camera.rotation);
       toast.success(`Loaded position ${index + 1}`);
     } else {
