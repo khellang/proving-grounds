@@ -1,20 +1,22 @@
-import { useRef, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { View, getDeviceProfile } from "@novorender/api";
 import { createAPI, type SceneData } from "@novorender/data-js-api";
+import Toolbar from "@/components/toolbar";
 
 const dataApi = createAPI({
   serviceUrl: "https://data.novorender.com/api",
 });
+
+const gpuTier = 2;
+const deviceProfile = getDeviceProfile(gpuTier);
 
 export interface RenderViewProps {
   sceneId: string;
 }
 
 export default function RenderView(props: RenderViewProps) {
-  const canvas = useRef<HTMLCanvasElement | null>(null);
-
-  const gpuTier = 2;
-  const deviceProfile = getDeviceProfile(gpuTier);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const [view, setView] = useState<View>();
 
   const { sceneId } = props;
 
@@ -31,22 +33,31 @@ export default function RenderView(props: RenderViewProps) {
       const baseUrl = new URL("/novorender/api/", window.location.origin);
       const imports = await View.downloadImports({ baseUrl });
 
-      const view = new View(canvas.current, deviceProfile, imports);
+      const newView = new View(canvas.current, deviceProfile, imports);
 
       const url = new URL(sceneData.url);
       const parentSceneId = url.pathname.replaceAll("/", "");
       url.pathname = "";
 
-      const config = await view.loadScene(url, parentSceneId, "index.json");
+      const config = await newView.loadScene(url, parentSceneId, "index.json");
 
       const { center, radius } = config.boundingSphere;
-      view.activeController.autoFit(center, radius);
+      newView.activeController.autoFit(center, radius);
 
-      await view.run(controller.signal);
+      setView(newView);
+
+      await newView.run(controller.signal);
     })();
 
     return () => controller.abort();
-  }, [deviceProfile, sceneId]);
+  }, [sceneId]);
 
-  return <canvas ref={canvas} className="h-full w-full min-h-screen"></canvas>;
+  return (
+    <div className="relative">
+      {view && (
+        <Toolbar view={view} className="absolute top-0 left-0 p-4 right-0" />
+      )}
+      <canvas ref={canvas} className="h-full w-full min-h-screen"></canvas>
+    </div>
+  );
 }

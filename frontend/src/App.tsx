@@ -1,14 +1,12 @@
 import RenderView from "@/components/render-view";
-import Toolbar from "@/components/toolbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <div className="relative">
-        <Toolbar className="absolute inset-4" />
-        <RenderView sceneId="3b5e65560dc4422da5c7c3f827b6a77c" />
-      </div>
+      <RenderView sceneId="3b5e65560dc4422da5c7c3f827b6a77c" />
+      <Toaster />
     </ThemeProvider>
   );
 }
