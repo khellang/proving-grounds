@@ -26,10 +26,17 @@ export default function RenderView(props: RenderViewProps) {
   const { sceneId } = props;
 
   useEffect(() => {
-    const controller = new AbortController();
-
     async function loadScene() {
-      if (!canvas.current) {
+      const sceneData = (await dataApi.loadScene(sceneId)) as SceneData;
+      setSceneData(sceneData);
+    }
+
+    loadScene();
+  }, [sceneId, theme]);
+
+  useEffect(() => {
+    async function initializeView() {
+      if (!canvas.current || !sceneData) {
         return;
       }
 
@@ -38,15 +45,14 @@ export default function RenderView(props: RenderViewProps) {
 
       const newView = new View(canvas.current, deviceProfile, imports);
 
-      const sceneData = (await dataApi.loadScene(sceneId)) as SceneData;
-
-      setSceneData(sceneData);
-
       const url = new URL(sceneData.url);
       const parentSceneId = url.pathname.replaceAll("/", "");
       url.pathname = "";
 
       const config = await newView.loadScene(url, parentSceneId, "index.json");
+
+      const { center, radius } = config.boundingSphere;
+      newView.activeController.autoFit(center, radius);
 
       newView.modifyRenderState({
         background: {
@@ -55,18 +61,27 @@ export default function RenderView(props: RenderViewProps) {
         },
       });
 
-      const { center, radius } = config.boundingSphere;
-      newView.activeController.autoFit(center, radius);
-
       setView(newView);
-
-      await newView.run(controller.signal);
     }
 
-    loadScene();
+    initializeView();
+  }, [sceneData, theme]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function render() {
+      if (!view) {
+        return;
+      }
+
+      await view.run(controller.signal);
+    }
+
+    render();
 
     return () => controller.abort();
-  }, [sceneId, theme]);
+  }, [view]);
 
   return (
     <div className="relative">
