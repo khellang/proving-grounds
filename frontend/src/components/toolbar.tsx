@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { View } from "@novorender/api";
 import { ModeToggle } from "./mode-toggle";
+import { toast } from "sonner";
 
 export interface ToolbarProps extends React.HTMLAttributes<"div"> {
   view: View;
@@ -13,9 +14,9 @@ export default function Toolbar(props: ToolbarProps) {
   const clickHandler = (index: number) => {
     return (e: React.MouseEvent<HTMLElement>) => {
       if (e.shiftKey) {
-        console.log("store position", index, view.renderState.camera);
+        toast.success(`Stored position ${index + 1}`);
       } else {
-        console.log("load position");
+        toast.success(`Loaded position ${index + 1}`);
       }
     };
   };
