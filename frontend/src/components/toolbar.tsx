@@ -9,7 +9,7 @@ export interface ToolbarProps extends React.HTMLAttributes<"div"> {
 }
 
 export default function Toolbar(props: ToolbarProps) {
-  const { view, className } = props;
+  const { className } = props;
 
   const clickHandler = (index: number) => {
     return (e: React.MouseEvent<HTMLElement>) => {
