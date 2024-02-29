@@ -100,7 +100,7 @@ export default function Toolbar(props: ToolbarProps) {
   return (
     <div
       className={cn(
-        "flex items-center md:space-x-3 space-y-2 justify-between flex-wrap md:flex-nowrap",
+        "flex items-center md:space-x-3 gap-2 justify-between flex-wrap md:flex-nowrap",
         className
       )}
     >
@@ -120,7 +120,7 @@ export default function Toolbar(props: ToolbarProps) {
         onStorePosition={storePosition}
       />
       <Input placeholder="Search" onChange={handleChange} />
-      <div className="md:grow flex justify-end">
+      <div className="grow flex justify-end">
         <ModeToggle />
       </div>
     </div>
