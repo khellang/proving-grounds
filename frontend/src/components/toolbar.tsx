@@ -22,7 +22,12 @@ export default function Toolbar(props: ToolbarProps) {
   };
 
   return (
-    <div className={cn("flex items-center space-x-3", className)}>
+    <div
+      className={cn(
+        "flex items-center md:space-x-3 justify-between",
+        className
+      )}
+    >
       <Button variant="outline" onClick={clickHandler(0)}>
         Position 1
       </Button>
@@ -32,7 +37,7 @@ export default function Toolbar(props: ToolbarProps) {
       <Button variant="outline" onClick={clickHandler(2)}>
         Position 3
       </Button>
-      <div className="grow flex justify-end">
+      <div className="md:grow flex justify-end">
         <ModeToggle />
       </div>
     </div>
