@@ -51,8 +51,10 @@ export default function RenderView(props: RenderViewProps) {
 
       const config = await newView.loadScene(url, parentSceneId, "index.json");
 
+      const flightController = await newView.switchCameraController("flight");
+
       const { center, radius } = config.boundingSphere;
-      newView.activeController.autoFit(center, radius);
+      flightController.autoFit(center, radius);
 
       newView.modifyRenderState({
         background: {
