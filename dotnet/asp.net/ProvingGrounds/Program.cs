@@ -1,12 +1,14 @@
+using ProvingGrounds;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-app.MapGet("/{files}", (int files, HttpResponse response) =>
+app.MapGet("/{files:int}", async (int files, HttpResponse response, CancellationToken cancellationToken) =>
 {
-    Zip.Write(response.Body, files);
+    await Zip.WriteAsync(response.BodyWriter, files, cancellationToken);
 });
 
 app.Run();
